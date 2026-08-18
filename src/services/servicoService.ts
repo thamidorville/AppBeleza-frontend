@@ -1,12 +1,5 @@
 import api from './api';
-import type { Servico } from '../types/servico';
-
-export interface NovoServicoRequest {
-  nome: string;
-  descricao: string;
-  preco: number;
-  duracaoMinutos: number;
-}
+import type { Servico, NovoServicoRequest } from '../types/servico';
 
 export async function listarMeusServicos(): Promise<Servico[]> {
   const response = await api.get('/servico/meus-servicos');

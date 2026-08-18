@@ -1,8 +1,8 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { getTokenData } from '../utils/token';
+import { useAuth } from '../../contexts/AuthContext';
+import { getTokenData } from '../../utils/token';
 
-function AdminLayout() {
+function ClienteLayout() {
   const { logout, token } = useAuth();
   const navigate = useNavigate();
   const dados = getTokenData(token);
@@ -16,17 +16,16 @@ function AdminLayout() {
     <div style={styles.container}>
       <aside style={styles.sidebar}>
         <h2 style={styles.logo}>Belagora</h2>
-        <p style={styles.badge}>Admin</p>
         <p style={styles.nomeUsuario}>{dados?.nome}</p>
         <nav style={styles.nav}>
-          <NavLink to="/admin" end style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
-            Painel
+          <NavLink to="/buscar" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
+            Buscar Serviços
           </NavLink>
-          <NavLink to="/admin/usuarios" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
-            Usuários
+          <NavLink to="/meus-agendamentos" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
+            Meus Agendamentos
           </NavLink>
-          <NavLink to="/admin/clientes" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
-            Clientes
+          <NavLink to="/alterar-senha" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
+            Alterar Senha
           </NavLink>
         </nav>
         <button onClick={handleLogout} style={styles.botaoLogout}>
@@ -48,26 +47,17 @@ const styles: Record<string, React.CSSProperties> = {
   },
   sidebar: {
     width: '240px',
-    backgroundColor: '#111827',
+    backgroundColor: '#c61fb5ff',
     padding: '24px 16px',
     display: 'flex',
     flexDirection: 'column',
   },
   logo: {
-    color: '#fff',
+    color: '#2141cbff',
     fontSize: '22px',
     fontWeight: 'bold',
     marginBottom: '4px',
     paddingLeft: '8px',
-  },
-  badge: {
-    color: '#a78bfa',
-    fontSize: '12px',
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-    paddingLeft: '8px',
-    marginBottom: '4px',
   },
   nomeUsuario: {
     color: '#9ca3af',
@@ -114,4 +104,4 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
-export default AdminLayout;
+export default ClienteLayout;

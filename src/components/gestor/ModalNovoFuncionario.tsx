@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { criarFuncionario } from '../services/funcionarioService';
+import { criarFuncionario } from '../../services/funcionarioService';
 
 interface ModalNovoFuncionarioProps {
   aberto: boolean;

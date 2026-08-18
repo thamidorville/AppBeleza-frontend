@@ -1,12 +1,5 @@
 import api from './api';
-import type { Funcionario } from '../types/funcionario';
-
-export interface NovoFuncionarioRequest {
-  nome: string;
-  email: string;
-  senha: string;
-  telefone: string;
-}
+import type { Funcionario, NovoFuncionarioRequest } from '../types/funcionario';
 
 export async function listarMeusFuncionarios(): Promise<Funcionario[]> {
   const response = await api.get('/funcionario/meus-funcionarios');

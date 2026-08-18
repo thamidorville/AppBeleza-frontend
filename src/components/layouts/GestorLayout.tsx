@@ -1,8 +1,8 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { getTokenData } from '../utils/token';
+import { useAuth } from '../../contexts/AuthContext';
+import { getTokenData } from '../../utils/token';
 
-function ClienteLayout() {
+function GestorLayout() {
   const { logout, token } = useAuth();
   const navigate = useNavigate();
   const dados = getTokenData(token);
@@ -18,14 +18,20 @@ function ClienteLayout() {
         <h2 style={styles.logo}>Belagora</h2>
         <p style={styles.nomeUsuario}>{dados?.nome}</p>
         <nav style={styles.nav}>
-          <NavLink to="/buscar" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
-            Buscar Serviços
+          <NavLink to="/dashboard" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
+            Dashboard
           </NavLink>
-          <NavLink to="/meus-agendamentos" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
-            Meus Agendamentos
+          <NavLink to="/funcionarios" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
+            Funcionários
           </NavLink>
-          <NavLink to="/alterar-senha" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
-            Alterar Senha
+          <NavLink to="/servicos" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
+            Serviços
+          </NavLink>
+          <NavLink to="/agenda" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
+            Agenda
+          </NavLink>
+          <NavLink to="/agendamentos" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
+            Agendamentos
           </NavLink>
         </nav>
         <button onClick={handleLogout} style={styles.botaoLogout}>
@@ -47,13 +53,13 @@ const styles: Record<string, React.CSSProperties> = {
   },
   sidebar: {
     width: '240px',
-    backgroundColor: '#c61fb5ff',
+    backgroundColor: '#1f2937',
     padding: '24px 16px',
     display: 'flex',
     flexDirection: 'column',
   },
   logo: {
-    color: '#2141cbff',
+    color: '#fff',
     fontSize: '22px',
     fontWeight: 'bold',
     marginBottom: '4px',
@@ -104,4 +110,4 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
-export default ClienteLayout;
+export default GestorLayout;

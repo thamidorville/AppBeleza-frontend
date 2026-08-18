@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { listarMeusFuncionarios } from '../../services/funcionarioService';
-import ModalNovoFuncionario from '../../components/ModalNovoFuncionario';
+import ModalNovoFuncionario from '../../components/gestor/ModalNovoFuncionario';
 import type { Funcionario } from '../../types/funcionario';
 
 function FuncionariosPage() {

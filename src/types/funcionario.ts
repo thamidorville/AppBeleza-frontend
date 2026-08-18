@@ -7,3 +7,10 @@ export interface Funcionario {
   ativo: boolean;
   criadoEm: string;
 }
+
+export interface NovoFuncionarioRequest {
+  nome: string;
+  email: string;
+  senha: string;
+  telefone: string;
+}

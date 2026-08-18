@@ -1,6 +1,6 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { getTokenData } from '../utils/token';
+import { useAuth } from '../../contexts/AuthContext';
+import { getTokenData } from '../../utils/token';
 
 function FuncionarioLayout() {
   const { logout, token } = useAuth();

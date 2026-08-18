@@ -7,14 +7,15 @@ import CadastroPage from './pages/auth/CadastroPage';
 import DashboardPage from './pages/gestor/DashboardPage';
 import FuncionariosPage from './pages/gestor/FuncionariosPage';
 import ServicosPage from './pages/gestor/ServicosPage';
-import AgendaPage from './pages/funcionario/AgendaPage';
+import AgendaPage from './pages/gestor/AgendaPage';
+import FuncionarioAgendaPage from './pages/funcionario/AgendaPage';
 import BuscarPage from './pages/cliente/BuscarPage';
 import PainelPage from './pages/admin/PainelPage';
 
-import GestorLayout from './components/GestorLayout';
-import FuncionarioLayout from './components/FuncionarioLayout';
-import ClienteLayout from './components/ClienteLayout';
-import AdminLayout from './components/AdminLayout';
+import GestorLayout from './components/layouts/GestorLayout';
+import FuncionarioLayout from './components/layouts/FuncionarioLayout';
+import ClienteLayout from './components/layouts/ClienteLayout';
+import AdminLayout from './components/layouts/AdminLayout';
 
 function App() {
   return (
@@ -32,13 +33,14 @@ function App() {
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/funcionarios" element={<FuncionariosPage />} />
               <Route path="/servicos" element={<ServicosPage />} />
+              <Route path="/agenda" element={<AgendaPage />} />
             </Route>
           </Route>
 
           {/* Rotas do Funcionário */}
           <Route element={<PrivateRoute allowedRoles={['Funcionario']} />}>
             <Route element={<FuncionarioLayout />}>
-              <Route path="/minha-agenda" element={<AgendaPage />} />
+              <Route path="/minha-agenda" element={<FuncionarioAgendaPage />} />
             </Route>
           </Route>
 

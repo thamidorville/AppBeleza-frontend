@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { criarServico } from '../services/servicoService';
+import { criarServico } from '../../services/servicoService';
 
 interface ModalNovoServicoProps {
   aberto: boolean;

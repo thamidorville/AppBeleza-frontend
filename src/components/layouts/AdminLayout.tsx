@@ -1,8 +1,8 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { getTokenData } from '../utils/token';
+import { useAuth } from '../../contexts/AuthContext';
+import { getTokenData } from '../../utils/token';
 
-function GestorLayout() {
+function AdminLayout() {
   const { logout, token } = useAuth();
   const navigate = useNavigate();
   const dados = getTokenData(token);
@@ -16,22 +16,17 @@ function GestorLayout() {
     <div style={styles.container}>
       <aside style={styles.sidebar}>
         <h2 style={styles.logo}>Belagora</h2>
+        <p style={styles.badge}>Admin</p>
         <p style={styles.nomeUsuario}>{dados?.nome}</p>
         <nav style={styles.nav}>
-          <NavLink to="/dashboard" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
-            Dashboard
+          <NavLink to="/admin" end style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
+            Painel
           </NavLink>
-          <NavLink to="/funcionarios" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
-            Funcionários
+          <NavLink to="/admin/usuarios" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
+            Usuários
           </NavLink>
-          <NavLink to="/servicos" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
-            Serviços
-          </NavLink>
-          <NavLink to="/agenda" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
-            Agenda
-          </NavLink>
-          <NavLink to="/agendamentos" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
-            Agendamentos
+          <NavLink to="/admin/clientes" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
+            Clientes
           </NavLink>
         </nav>
         <button onClick={handleLogout} style={styles.botaoLogout}>
@@ -53,7 +48,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   sidebar: {
     width: '240px',
-    backgroundColor: '#1f2937',
+    backgroundColor: '#111827',
     padding: '24px 16px',
     display: 'flex',
     flexDirection: 'column',
@@ -64,6 +59,15 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 'bold',
     marginBottom: '4px',
     paddingLeft: '8px',
+  },
+  badge: {
+    color: '#a78bfa',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    paddingLeft: '8px',
+    marginBottom: '4px',
   },
   nomeUsuario: {
     color: '#9ca3af',
@@ -110,4 +114,4 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
-export default GestorLayout;
+export default AdminLayout;

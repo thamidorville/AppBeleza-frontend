@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { listarMeusServicos } from '../../services/servicoService';
-import ModalNovoServico from '../../components/ModalNovoServico';
+import ModalNovoServico from '../../components/gestor/ModalNovoServico';
 import type { Servico } from '../../types/servico';
 
 function ServicosPage() {

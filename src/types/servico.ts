@@ -8,3 +8,10 @@ export interface Servico {
   ativo: boolean;
   criadoEm: string;
 }
+
+export interface NovoServicoRequest {
+  nome: string;
+  descricao: string;
+  preco: number;
+  duracaoMinutos: number;
+}
