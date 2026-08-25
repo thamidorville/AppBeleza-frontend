@@ -33,6 +33,9 @@ function GestorLayout() {
           <NavLink to="/agendamentos" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
             Agendamentos
           </NavLink>
+          <NavLink to="/alterar-senha" style={({ isActive }) => isActive ? styles.linkAtivo : styles.link}>
+            Alterar Senha
+          </NavLink>
         </nav>
         <button onClick={handleLogout} style={styles.botaoLogout}>
           Sair

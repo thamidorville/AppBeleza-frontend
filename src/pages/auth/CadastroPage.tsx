@@ -6,8 +6,6 @@ function CadastroPage() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [tipoPessoa, setTipoPessoa] = useState('PF');
-  const [documento, setDocumento] = useState('');
   const [telefone, setTelefone] = useState('');
   const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(false);
@@ -19,12 +17,10 @@ function CadastroPage() {
     setCarregando(true);
 
     try {
-      await api.post('/auth/cadastro/usuario', {
+      await api.post('/auth/cadastro/cliente', {
         nome,
         email,
         senha,
-        tipoPessoa,
-        documento,
         telefone,
       });
       setSucesso(true);
@@ -57,7 +53,7 @@ function CadastroPage() {
         ) : (
           <div style={styles.card}>
             <h1 style={styles.titulo}>Crie sua conta</h1>
-            <p style={styles.subtitulo}>Preencha os dados abaixo</p>
+            <p style={styles.subtitulo}>Agende serviços de beleza perto de você</p>
 
             <form onSubmit={handleSubmit} style={styles.form}>
               <input
@@ -84,22 +80,6 @@ function CadastroPage() {
                 style={styles.input}
                 required
               />
-              <select
-                value={tipoPessoa}
-                onChange={(e) => setTipoPessoa(e.target.value)}
-                style={styles.input}
-              >
-                <option value="PF">Pessoa Física</option>
-                <option value="PJ">Pessoa Jurídica</option>
-              </select>
-              <input
-                type="text"
-                placeholder={tipoPessoa === 'PF' ? 'CPF' : 'CNPJ'}
-                value={documento}
-                onChange={(e) => setDocumento(e.target.value)}
-                style={styles.input}
-                required
-              />
               <input
                 type="tel"
                 placeholder="Telefone (opcional)"
@@ -111,7 +91,7 @@ function CadastroPage() {
               {erro && <p style={styles.erro}>{erro}</p>}
 
               <button type="submit" style={styles.botao} disabled={carregando}>
-                {carregando ? 'Salvando...' : 'Salvar'}
+                {carregando ? 'Salvando...' : 'Criar conta'}
               </button>
             </form>
 

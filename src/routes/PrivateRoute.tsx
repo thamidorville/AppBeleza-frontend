@@ -2,7 +2,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 interface PrivateRouteProps {
-  allowedRoles: string[];
+  allowedRoles?: string[];
 }
 
 function PrivateRoute({ allowedRoles }: PrivateRouteProps) {
@@ -12,7 +12,7 @@ function PrivateRoute({ allowedRoles }: PrivateRouteProps) {
     return <Navigate to="/login" replace />;
   }
 
-  if (role && !allowedRoles.includes(role)) {
+  if (allowedRoles && role && !allowedRoles.includes(role)) {
     return <Navigate to="/login" replace />;
   }
 

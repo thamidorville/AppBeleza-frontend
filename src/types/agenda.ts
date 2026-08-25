@@ -3,6 +3,7 @@ export interface Agenda {
   funcionarioId: string | null;
   funcionarioNome: string | null;
   usuarioId: string;
+  usuarioNome: string;
   servicoId: string;
   servicoNome: string;
   dataAgendamento: string;

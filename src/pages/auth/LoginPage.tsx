@@ -53,7 +53,7 @@ function LoginPage() {
       <div style={styles.formLado}>
         <div style={styles.card}>
           <h1 style={styles.titulo}>Acesse sua conta</h1>
-          <p style={styles.subtitulo}>Gerencie sua agenda, serviços e equipe</p>
+          <p style={styles.subtitulo}>Entre com seu email e senha</p>
 
           <form onSubmit={handleSubmit} style={styles.form}>
             <input
@@ -82,8 +82,12 @@ function LoginPage() {
           </form>
 
           <p style={styles.linkTexto}>
-            Não tem cadastro ainda?{' '}
-            <Link to="/cadastro" style={styles.link}>Cadastre-se</Link>
+            É cliente?{' '}
+            <Link to="/cadastro" style={styles.link}>Crie sua conta</Link>
+          </p>
+          <p style={styles.linkTexto}>
+            É profissional?{' '}
+            <Link to="/para-profissionais" style={styles.link}>Conheça nossos planos</Link>
           </p>
         </div>
       </div>
