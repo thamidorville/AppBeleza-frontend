@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { listarVitrineDoCliente, criarAgendamento } from '../../services/agendamentoService';
+import { obterMeuEndereco } from '../../services/cepService';
 import type { Agenda } from '../../types/agenda';
 
 function BuscarPage() {
@@ -9,7 +10,10 @@ function BuscarPage() {
 
   async function carregar() {
     try {
-      const dados = await listarVitrineDoCliente();
+      const meuEndereco = await obterMeuEndereco();
+      const lat = meuEndereco?.latitude;
+      const lng = meuEndereco?.longitude;
+      const dados = await listarVitrineDoCliente(lat, lng);
       setAgendas(dados);
     } catch (error) {
       console.error('Erro ao carregar vitrine:', error);
@@ -59,6 +63,12 @@ function BuscarPage() {
                 <p style={styles.detalhe}>
                   {a.dataAgendamento} • {a.horaInicio} - {a.horaFim}
                 </p>
+                {a.enderecoBairro && a.enderecoCidade && (
+                  <p style={styles.detalhe}>{a.enderecoBairro}, {a.enderecoCidade}</p>
+                )}
+                {a.distanciaKm != null && (
+                  <p style={styles.distancia}>{a.distanciaKm} km de você</p>
+                )}
               </div>
               <button onClick={() => handleAgendar(a.id)} style={styles.botaoAgendar}>
                 Agendar
@@ -124,6 +134,12 @@ const styles: Record<string, React.CSSProperties> = {
   detalhe: {
     fontSize: '13px',
     color: '#6b7280',
+    margin: 0,
+  },
+  distancia: {
+    fontSize: '13px',
+    color: '#16a34a',
+    fontWeight: 'bold',
     margin: 0,
   },
   botaoAgendar: {

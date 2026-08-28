@@ -15,7 +15,9 @@ import BuscarPage from './pages/cliente/BuscarPage';
 import MeusAgendamentosPage from './pages/cliente/MeusAgendamentosPage';
 import PainelPage from './pages/admin/PainelPage';
 import UsuariosPage from './pages/admin/UsuariosPage';
+import ClientesPage from './pages/admin/ClientesPage';
 import AlterarSenhaPage from './pages/shared/AlterarSenhaPage';
+import MeusDadosPage from './pages/shared/MeusDadosPage';
 
 import GestorLayout from './components/layouts/GestorLayout';
 import FuncionarioLayout from './components/layouts/FuncionarioLayout';
@@ -27,13 +29,11 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          {/* Rotas públicas */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/cadastro" element={<CadastroPage />} />
           <Route path="/para-profissionais" element={<ParaProfissionaisPage />} />
           <Route path="/" element={<LoginPage />} />
 
-          {/* Rotas do Gestor */}
           <Route element={<PrivateRoute allowedRoles={['Gestor']} />}>
             <Route element={<GestorLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
@@ -44,14 +44,12 @@ function App() {
             </Route>
           </Route>
 
-          {/* Rotas do Funcionário */}
           <Route element={<PrivateRoute allowedRoles={['Funcionario']} />}>
             <Route element={<FuncionarioLayout />}>
               <Route path="/minha-agenda" element={<FuncionarioAgendaPage />} />
             </Route>
           </Route>
 
-          {/* Rotas do Cliente */}
           <Route element={<PrivateRoute allowedRoles={['Cliente']} />}>
             <Route element={<ClienteLayout />}>
               <Route path="/buscar" element={<BuscarPage />} />
@@ -59,17 +57,17 @@ function App() {
             </Route>
           </Route>
 
-          {/* Rotas do Admin */}
           <Route element={<PrivateRoute allowedRoles={['Admin']} />}>
             <Route element={<AdminLayout />}>
               <Route path="/admin" element={<PainelPage />} />
               <Route path="/admin/usuarios" element={<UsuariosPage />} />
+              <Route path="/admin/clientes" element={<ClientesPage />} />
             </Route>
           </Route>
 
-          {/* Rota compartilhada (qualquer ator logado) */}
           <Route element={<PrivateRoute />}>
             <Route path="/alterar-senha" element={<AlterarSenhaPage />} />
+            <Route path="/meus-dados" element={<MeusDadosPage />} />
           </Route>
         </Routes>
       </AuthProvider>

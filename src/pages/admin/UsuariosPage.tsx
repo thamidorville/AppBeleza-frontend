@@ -55,6 +55,7 @@ function UsuariosPage() {
             <tr>
               <th style={styles.th}>Nome</th>
               <th style={styles.th}>Email</th>
+              <th style={styles.th}>Role</th>
               <th style={styles.th}>Tipo</th>
               <th style={styles.th}>Documento</th>
               <th style={styles.th}>Telefone</th>
@@ -65,6 +66,7 @@ function UsuariosPage() {
               <tr key={u.id}>
                 <td style={styles.td}>{u.nome}</td>
                 <td style={styles.td}>{u.email}</td>
+                <td style={styles.td}>{u.role}</td>
                 <td style={styles.td}>{u.tipoPessoa}</td>
                 <td style={styles.td}>{u.documento}</td>
                 <td style={styles.td}>{u.telefone || '-'}</td>

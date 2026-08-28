@@ -9,7 +9,10 @@ export interface Agenda {
   dataAgendamento: string;
   horaInicio: string;
   horaFim: string;
-  disponivel: boolean;
+  status: string;
+  enderecoBairro: string | null;
+  enderecoCidade: string | null;
+  distanciaKm: number | null;
   criadoEm: string;
 }
 

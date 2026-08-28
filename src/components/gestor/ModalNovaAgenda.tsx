@@ -1,17 +1,25 @@
 import { useEffect, useState } from 'react';
-import { criarAgenda } from '../../services/agendaService';
+import { criarAgenda, atualizarAgenda } from '../../services/agendaService';
 import { listarMeusFuncionarios } from '../../services/funcionarioService';
 import { listarMeusServicos } from '../../services/servicoService';
 import type { Funcionario } from '../../types/funcionario';
 import type { Servico } from '../../types/servico';
+import type { Agenda } from '../../types/agenda';
 
 interface ModalNovaAgendaProps {
   aberto: boolean;
   aoFechar: () => void;
   aoSalvar: () => void;
+  agendaParaEditar?: Agenda | null;
 }
 
-function ModalNovaAgenda({ aberto, aoFechar, aoSalvar }: ModalNovaAgendaProps) {
+function paraFormatoInput(data: string): string {
+  const partes = data.split('/');
+  if (partes.length !== 3) return '';
+  return `${partes[2]}-${partes[1]}-${partes[0]}`;
+}
+
+function ModalNovaAgenda({ aberto, aoFechar, aoSalvar, agendaParaEditar }: ModalNovaAgendaProps) {
   const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
   const [servicos, setServicos] = useState<Servico[]>([]);
   const [funcionarioId, setFuncionarioId] = useState('');
@@ -22,12 +30,28 @@ function ModalNovaAgenda({ aberto, aoFechar, aoSalvar }: ModalNovaAgendaProps) {
   const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(false);
 
+  const modoEdicao = !!agendaParaEditar;
+
   useEffect(() => {
     if (aberto) {
       listarMeusFuncionarios().then(setFuncionarios);
       listarMeusServicos().then(setServicos);
+
+      if (agendaParaEditar) {
+        setFuncionarioId(agendaParaEditar.funcionarioId ?? '');
+        setServicoId(agendaParaEditar.servicoId);
+        setDataAgendamento(paraFormatoInput(agendaParaEditar.dataAgendamento));
+        setHoraInicio(agendaParaEditar.horaInicio);
+        setHoraFim(agendaParaEditar.horaFim);
+      } else {
+        setFuncionarioId('');
+        setServicoId('');
+        setDataAgendamento('');
+        setHoraInicio('');
+        setHoraFim('');
+      }
     }
-  }, [aberto]);
+  }, [aberto, agendaParaEditar]);
 
   if (!aberto) return null;
 
@@ -36,22 +60,23 @@ function ModalNovaAgenda({ aberto, aoFechar, aoSalvar }: ModalNovaAgendaProps) {
     setErro('');
     setCarregando(true);
 
+    const dados = {
+      funcionarioId: funcionarioId || undefined,
+      servicoId,
+      dataAgendamento,
+      horaInicio,
+      horaFim,
+    };
+
     try {
-      await criarAgenda({
-        funcionarioId: funcionarioId || undefined,
-        servicoId,
-        dataAgendamento,
-        horaInicio,
-        horaFim,
-      });
-      setFuncionarioId('');
-      setServicoId('');
-      setDataAgendamento('');
-      setHoraInicio('');
-      setHoraFim('');
+      if (modoEdicao && agendaParaEditar) {
+        await atualizarAgenda(agendaParaEditar.id, dados);
+      } else {
+        await criarAgenda(dados);
+      }
       aoSalvar();
     } catch {
-      setErro('Erro ao publicar horário. Verifique os dados.');
+      setErro('Erro ao salvar horário. Verifique os dados.');
     } finally {
       setCarregando(false);
     }
@@ -60,7 +85,7 @@ function ModalNovaAgenda({ aberto, aoFechar, aoSalvar }: ModalNovaAgendaProps) {
   return (
     <div style={styles.overlay} onClick={aoFechar}>
       <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <h2 style={styles.titulo}>Novo Horário</h2>
+        <h2 style={styles.titulo}>{modoEdicao ? 'Editar Horário' : 'Novo Horário'}</h2>
 
         <form onSubmit={handleSubmit} style={styles.form}>
           <select
@@ -119,7 +144,7 @@ function ModalNovaAgenda({ aberto, aoFechar, aoSalvar }: ModalNovaAgendaProps) {
               Cancelar
             </button>
             <button type="submit" style={styles.botaoSalvar} disabled={carregando}>
-              {carregando ? 'Publicando...' : 'Publicar'}
+              {carregando ? 'Salvando...' : modoEdicao ? 'Salvar' : 'Publicar'}
             </button>
           </div>
         </form>

@@ -5,6 +5,7 @@ export interface Agendamento {
   clienteNome: string;
   servicoId: string;
   servicoNome: string;
+  servicoPreco: number;
   funcionarioId: string | null;
   funcionarioNome: string | null;
   usuarioId: string;
@@ -13,5 +14,7 @@ export interface Agendamento {
   horarioInicio: string;
   horarioFim: string;
   status: string;
+  motivoCancelamento: string | null;
+  canceladoPor: string | null;
   criadoEm: string;
 }

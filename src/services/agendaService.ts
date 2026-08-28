@@ -10,3 +10,11 @@ export async function criarAgenda(dados: NovaAgendaRequest): Promise<Agenda> {
   const response = await api.post('/agenda', dados);
   return response.data;
 }
+
+export async function atualizarAgenda(id: string, dados: NovaAgendaRequest): Promise<void> {
+  await api.put(`/agenda/${id}`, dados);
+}
+
+export async function deletarAgenda(id: string): Promise<void> {
+  await api.delete(`/agenda/${id}`);
+}

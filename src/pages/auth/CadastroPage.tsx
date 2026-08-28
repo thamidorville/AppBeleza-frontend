@@ -1,15 +1,34 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
+import { consultarCep } from '../../services/cepService';
 
 function CadastroPage() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [telefone, setTelefone] = useState('');
+  const [cep, setCep] = useState('');
+  const [logradouro, setLogradouro] = useState('');
+  const [numero, setNumero] = useState('');
+  const [complemento, setComplemento] = useState('');
+  const [bairro, setBairro] = useState('');
+  const [cidade, setCidade] = useState('');
+  const [estado, setEstado] = useState('');
   const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(false);
   const [sucesso, setSucesso] = useState(false);
+
+  async function handleCepBlur() {
+    if (cep.length < 8) return;
+    const dados = await consultarCep(cep);
+    if (dados) {
+      setLogradouro(dados.logradouro);
+      setBairro(dados.bairro);
+      setCidade(dados.cidade);
+      setEstado(dados.estado);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -18,10 +37,8 @@ function CadastroPage() {
 
     try {
       await api.post('/auth/cadastro/cliente', {
-        nome,
-        email,
-        senha,
-        telefone,
+        nome, email, senha, telefone,
+        cep, logradouro, numero, complemento, bairro, cidade, estado,
       });
       setSucesso(true);
     } catch {
@@ -86,6 +103,63 @@ function CadastroPage() {
                 value={telefone}
                 onChange={(e) => setTelefone(e.target.value)}
                 style={styles.input}
+              />
+
+              <input
+                type="text"
+                placeholder="CEP"
+                value={cep}
+                onChange={(e) => setCep(e.target.value)}
+                onBlur={handleCepBlur}
+                style={styles.input}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Logradouro"
+                value={logradouro}
+                onChange={(e) => setLogradouro(e.target.value)}
+                style={styles.input}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Número"
+                value={numero}
+                onChange={(e) => setNumero(e.target.value)}
+                style={styles.input}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Complemento (opcional)"
+                value={complemento}
+                onChange={(e) => setComplemento(e.target.value)}
+                style={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="Bairro"
+                value={bairro}
+                onChange={(e) => setBairro(e.target.value)}
+                style={styles.input}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Cidade"
+                value={cidade}
+                onChange={(e) => setCidade(e.target.value)}
+                style={styles.input}
+                required
+              />
+              <input
+                type="text"
+                placeholder="UF"
+                value={estado}
+                onChange={(e) => setEstado(e.target.value)}
+                style={styles.input}
+                required
               />
 
               {erro && <p style={styles.erro}>{erro}</p>}

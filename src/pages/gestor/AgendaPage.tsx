@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
-import { listarMinhaAgenda } from '../../services/agendaService';
+import { listarMinhaAgenda, deletarAgenda } from '../../services/agendaService';
 import ModalNovaAgenda from '../../components/gestor/ModalNovaAgenda';
+import ModalGenerico from '../../components/shared/ModalGenerico';
 import type { Agenda } from '../../types/agenda';
 
 function AgendaPage() {
   const [agendas, setAgendas] = useState<Agenda[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [modalAberto, setModalAberto] = useState(false);
+  const [agendaParaEditar, setAgendaParaEditar] = useState<Agenda | null>(null);
+  const [modalRemoverAberto, setModalRemoverAberto] = useState(false);
+  const [agendaParaRemover, setAgendaParaRemover] = useState<Agenda | null>(null);
 
   async function carregar() {
     try {
       const dados = await listarMinhaAgenda();
-      console.log('Agendas recebidas:', dados);
       setAgendas(dados);
     } catch (error) {
       console.error('Erro ao carregar agenda:', error);
@@ -26,7 +29,38 @@ function AgendaPage() {
 
   function handleSalvar() {
     setModalAberto(false);
+    setAgendaParaEditar(null);
     carregar();
+  }
+
+  function abrirNovo() {
+    setAgendaParaEditar(null);
+    setModalAberto(true);
+  }
+
+  function abrirEdicao(agenda: Agenda) {
+    setAgendaParaEditar(agenda);
+    setModalAberto(true);
+  }
+
+  function handleRemover(agenda: Agenda) {
+    setAgendaParaRemover(agenda);
+    setModalRemoverAberto(true);
+  }
+
+  async function confirmarRemocao() {
+    if (!agendaParaRemover) return;
+
+    try {
+      await deletarAgenda(agendaParaRemover.id);
+      carregar();
+    } catch (error) {
+      console.error('Erro ao remover agenda:', error);
+      alert('Não foi possível remover. Verifique se há agendamento ativo neste horário.');
+    } finally {
+      setModalRemoverAberto(false);
+      setAgendaParaRemover(null);
+    }
   }
 
   if (carregando) {
@@ -37,15 +71,16 @@ function AgendaPage() {
     <div>
       <div style={styles.header}>
         <h1>Agenda</h1>
-        <button onClick={() => setModalAberto(true)} style={styles.botaoNovo}>
+        <button onClick={abrirNovo} style={styles.botaoNovo}>
           + Novo Horário
         </button>
       </div>
 
       <ModalNovaAgenda
         aberto={modalAberto}
-        aoFechar={() => setModalAberto(false)}
+        aoFechar={() => { setModalAberto(false); setAgendaParaEditar(null); }}
         aoSalvar={handleSalvar}
+        agendaParaEditar={agendaParaEditar}
       />
 
       {agendas.length === 0 ? (
@@ -59,6 +94,7 @@ function AgendaPage() {
               <th style={styles.th}>Funcionário</th>
               <th style={styles.th}>Serviço</th>
               <th style={styles.th}>Status</th>
+              <th style={styles.th}>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -69,15 +105,34 @@ function AgendaPage() {
                 <td style={styles.td}>{a.funcionarioNome || 'Próprio'}</td>
                 <td style={styles.td}>{a.servicoNome}</td>
                 <td style={styles.td}>
-                  <span style={a.disponivel ? styles.disponivel : styles.ocupado}>
-                    {a.disponivel ? 'Disponível' : 'Ocupado'}
+                  <span style={a.status === 'Disponivel' ? styles.disponivel : a.status === 'Cancelado' ? styles.cancelado : styles.ocupado}>
+                    {a.status}
                   </span>
+                </td>
+                <td style={styles.td}>
+                  <div style={styles.acoes}>
+                    <button onClick={() => abrirEdicao(a)} style={styles.botaoEditar}>
+                      Editar
+                    </button>
+                    <button onClick={() => handleRemover(a)} style={styles.botaoRemover}>
+                      Remover
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
+
+      <ModalGenerico
+        aberto={modalRemoverAberto}
+        titulo="Remover horário"
+        mensagem="Tem certeza que deseja remover este horário da agenda?"
+        textoBotaoConfirmar="Remover"
+        aoConfirmar={confirmarRemocao}
+        aoFechar={() => { setModalRemoverAberto(false); setAgendaParaRemover(null); }}
+      />
     </div>
   );
 }
@@ -132,9 +187,36 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '13px',
   },
   ocupado: {
+    color: '#f59e0b',
+    fontWeight: 'bold',
+    fontSize: '13px',
+  },
+  cancelado: {
     color: '#dc2626',
     fontWeight: 'bold',
     fontSize: '13px',
+  },
+  acoes: {
+    display: 'flex',
+    gap: '8px',
+  },
+  botaoEditar: {
+    padding: '6px 12px',
+    borderRadius: '6px',
+    border: '1px solid #7c3aed',
+    backgroundColor: '#fff',
+    color: '#7c3aed',
+    fontSize: '13px',
+    cursor: 'pointer',
+  },
+  botaoRemover: {
+    padding: '6px 12px',
+    borderRadius: '6px',
+    border: '1px solid #dc2626',
+    backgroundColor: '#fff',
+    color: '#dc2626',
+    fontSize: '13px',
+    cursor: 'pointer',
   },
 };
 

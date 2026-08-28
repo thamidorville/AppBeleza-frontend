@@ -1,25 +1,48 @@
 import { useEffect, useState } from 'react';
-import { listarMeusAgendamentos } from '../../services/agendamentoService';
+import { listarMeusAgendamentos, cancelarAgendamento } from '../../services/agendamentoService';
+import ModalGenerico from '../../components/shared/ModalGenerico';
 import type { Agendamento } from '../../types/agendamento';
 
 function MeusAgendamentosPage() {
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
   const [carregando, setCarregando] = useState(true);
+  const [modalAberto, setModalAberto] = useState(false);
+  const [idParaCancelar, setIdParaCancelar] = useState<string | null>(null);
+
+  async function carregar() {
+    try {
+      const dados = await listarMeusAgendamentos();
+      setAgendamentos(dados);
+    } catch (error) {
+      console.error('Erro ao carregar agendamentos:', error);
+    } finally {
+      setCarregando(false);
+    }
+  }
 
   useEffect(() => {
-    async function carregar() {
-      try {
-        const dados = await listarMeusAgendamentos();
-        setAgendamentos(dados);
-      } catch (error) {
-        console.error('Erro ao carregar agendamentos:', error);
-      } finally {
-        setCarregando(false);
-      }
-    }
-
     carregar();
   }, []);
+
+  async function handleCancelar(id: string) {
+    setIdParaCancelar(id);
+    setModalAberto(true);
+  }
+
+  async function confirmarCancelamento(motivo?: string) {
+    if (!idParaCancelar || !motivo) return;
+
+    try {
+      await cancelarAgendamento(idParaCancelar, motivo);
+      carregar();
+    } catch (error) {
+      console.error('Erro ao cancelar agendamento:', error);
+      alert('Não foi possível cancelar o agendamento.');
+    } finally {
+      setModalAberto(false);
+      setIdParaCancelar(null);
+    }
+  }
 
   if (carregando) {
     return <p>Carregando...</p>;
@@ -43,13 +66,38 @@ function MeusAgendamentosPage() {
                 </p>
                 <p style={styles.data}>{a.data} • {a.horarioInicio} - {a.horarioFim}</p>
               </div>
-              <span style={a.status === 'Confirmado' ? styles.statusConfirmado : a.status === 'Cancelado' ? styles.statusCancelado : styles.statusConcluido}>
-                {a.status}
-              </span>
+              <div style={styles.cardAcoes}>
+                <span style={a.status === 'Confirmado' ? styles.statusConfirmado : a.status === 'Cancelado' ? styles.statusCancelado : styles.statusConcluido}>
+                  {a.status}
+                </span>
+                {a.status === 'Confirmado' && (
+                  <button onClick={() => handleCancelar(a.id)} style={styles.botaoCancelar}>
+                    Cancelar
+                  </button>
+                )}
+                {a.status === 'Cancelado' && a.motivoCancelamento && (
+                  <p style={styles.motivo}>
+                    {a.canceladoPor === 'Gestor' ? 'Pelo salão: ' : 'Por você: '}
+                    {a.motivoCancelamento}
+                  </p>
+                )}
+              </div>
             </div>
           ))}
         </div>
       )}
+
+      <ModalGenerico
+        aberto={modalAberto}
+        titulo="Cancelar agendamento"
+        mensagem="Informe o motivo do cancelamento:"
+        comInput={true}
+        inputObrigatorio={true}
+        placeholderInput="Ex: não poderei comparecer"
+        textoBotaoConfirmar="Cancelar agendamento"
+        aoConfirmar={confirmarCancelamento}
+        aoFechar={() => { setModalAberto(false); setIdParaCancelar(null); }}
+      />
     </div>
   );
 }
@@ -58,6 +106,29 @@ const styles: Record<string, React.CSSProperties> = {
   vazio: {
     color: '#6b7280',
     fontSize: '16px',
+  },
+  cardAcoes: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    gap: '8px',
+  },
+  botaoCancelar: {
+    padding: '6px 12px',
+    borderRadius: '6px',
+    border: '1px solid #dc2626',
+    backgroundColor: '#fff',
+    color: '#dc2626',
+    fontSize: '13px',
+    cursor: 'pointer',
+  },
+  motivo: {
+    fontSize: '12px',
+    color: '#6b7280',
+    margin: 0,
+    fontStyle: 'italic',
+    maxWidth: '200px',
+    textAlign: 'right',
   },
   lista: {
     display: 'flex',
