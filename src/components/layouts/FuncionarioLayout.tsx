@@ -96,6 +96,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
   main: {
     flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
     backgroundColor: '#f9fafb',
     padding: '32px',
   },

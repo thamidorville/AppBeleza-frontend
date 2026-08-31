@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { getTokenData } from '../../utils/token';
+import FundoTema from '../../styles/FundoTema';
+import { tema } from '../../styles/tema';
 
 interface Card {
   titulo: string;
@@ -24,9 +26,11 @@ function DashboardPage() {
   const [hover, setHover] = useState<string | null>(null);
 
   return (
-    <div>
-      <h1 style={styles.titulo}>Oi, {dados?.nome}</h1>
-      <p style={styles.subtitulo}>Bem-vindo ao painel do seu estabelecimento.</p>
+    <FundoTema largura="total">
+      <div style={tema.hero}>
+        <h1 style={tema.heroTitulo}>Oi, {dados?.nome}</h1>
+        <p style={tema.heroSubtitulo}>Bem-vindo ao painel do seu estabelecimento.</p>
+      </div>
 
       <div style={styles.grid}>
         {cards.map((card) => (
@@ -59,21 +63,11 @@ function DashboardPage() {
           </div>
         ))}
       </div>
-    </div>
+    </FundoTema>
   );
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  titulo: {
-    color: '#1f2937',
-    fontSize: '28px',
-    marginBottom: '4px',
-  },
-  subtitulo: {
-    color: '#6b7280',
-    fontSize: '15px',
-    marginBottom: '32px',
-  },
   grid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',

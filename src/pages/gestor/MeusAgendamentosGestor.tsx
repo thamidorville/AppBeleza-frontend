@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { listarMeusAgendamentosGestor, cancelarAgendamentoGestor, concluirAgendamento } from '../../services/agendamentoService';
 import ModalGenerico from '../../components/shared/ModalGenerico';
+import FundoTema from '../../styles/FundoTema';
+import { tema } from '../../styles/tema';
 import type { Agendamento } from '../../types/agendamento';
 
 function MeusAgendamentosGestor() {
@@ -67,9 +69,9 @@ function MeusAgendamentosGestor() {
   }
 
   function estiloStatus(status: string): React.CSSProperties {
-    if (status === 'Confirmado') return styles.statusConfirmado;
-    if (status === 'Cancelado') return styles.statusCancelado;
-    return styles.statusConcluido;
+    if (status === 'Confirmado') return tema.statusVerde;
+    if (status === 'Cancelado') return tema.statusVermelho;
+    return tema.statusAzul;
   }
 
   if (carregando) {
@@ -85,15 +87,15 @@ function MeusAgendamentosGestor() {
   const agendamentosFiltrados = agendamentos.filter((a) => a.status === abaAtiva);
 
   return (
-    <div>
-      <h1>Agendamentos</h1>
+    <FundoTema largura="total">
+      <h1 style={tema.heroTitulo}>Agendamentos</h1>
 
-      <div style={styles.abas}>
+      <div style={tema.abas}>
         {abas.map((aba) => (
           <button
             key={aba}
             onClick={() => setAbaAtiva(aba)}
-            style={abaAtiva === aba ? styles.abaAtiva : styles.aba}
+            style={abaAtiva === aba ? tema.abaAtiva : tema.aba}
           >
             {rotuloAba[aba]}
           </button>
@@ -101,44 +103,44 @@ function MeusAgendamentosGestor() {
       </div>
 
       {agendamentosFiltrados.length === 0 ? (
-        <p style={styles.vazio}>Nenhum agendamento nesta categoria.</p>
+        <p style={tema.vazio}>Nenhum agendamento nesta categoria.</p>
       ) : (
-        <table style={styles.tabela}>
+        <table style={tema.tabelaVidro}>
           <thead>
             <tr>
-              <th style={styles.th}>Data</th>
-              <th style={styles.th}>Horário</th>
-              <th style={styles.th}>Cliente</th>
-              <th style={styles.th}>Serviço</th>
-              <th style={styles.th}>Funcionário</th>
-              <th style={styles.th}>Status</th>
-              <th style={styles.th}>Ações</th>
+              <th style={tema.th}>Data</th>
+              <th style={tema.th}>Horário</th>
+              <th style={tema.th}>Cliente</th>
+              <th style={tema.th}>Serviço</th>
+              <th style={tema.th}>Funcionário</th>
+              <th style={tema.th}>Status</th>
+              <th style={tema.th}>Ações</th>
             </tr>
           </thead>
           <tbody>
             {agendamentosFiltrados.map((a) => (
               <tr key={a.id}>
-                <td style={styles.td}>{a.data}</td>
-                <td style={styles.td}>{a.horarioInicio} - {a.horarioFim}</td>
-                <td style={styles.td}>{a.clienteNome}</td>
-                <td style={styles.td}>{a.servicoNome}</td>
-                <td style={styles.td}>{a.funcionarioNome || 'Próprio'}</td>
-                <td style={styles.td}>
+                <td style={tema.td}>{a.data}</td>
+                <td style={tema.td}>{a.horarioInicio} - {a.horarioFim}</td>
+                <td style={tema.td}>{a.clienteNome}</td>
+                <td style={tema.td}>{a.servicoNome}</td>
+                <td style={tema.td}>{a.funcionarioNome || 'Próprio'}</td>
+                <td style={tema.td}>
                   <span style={estiloStatus(a.status)}>{a.status}</span>
                   {a.status === 'Cancelado' && a.motivoCancelamento && (
-                    <p style={styles.motivo}>
+                    <p style={tema.motivo}>
                       {a.canceladoPor === 'Cliente' ? 'Pelo cliente: ' : 'Por você: '}
                       {a.motivoCancelamento}
                     </p>
                   )}
                 </td>
-                <td style={styles.td}>
+                <td style={tema.td}>
                   {a.status === 'Confirmado' && (
-                    <div style={styles.acoes}>
-                      <button onClick={() => handleConcluir(a.id)} style={styles.botaoConcluir}>
+                    <div style={tema.acoes}>
+                      <button onClick={() => handleConcluir(a.id)} style={tema.botaoAcaoVerde}>
                         Concluir
                       </button>
-                      <button onClick={() => handleCancelar(a.id)} style={styles.botaoCancelar}>
+                      <button onClick={() => handleCancelar(a.id)} style={tema.botaoAcaoVermelho}>
                         Cancelar
                       </button>
                     </div>
@@ -170,107 +172,8 @@ function MeusAgendamentosGestor() {
         aoConfirmar={confirmarConclusao}
         aoFechar={() => { setModalConcluirAberto(false); setIdSelecionado(null); }}
       />
-    </div>
+    </FundoTema>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  vazio: {
-    color: '#6b7280',
-    fontSize: '16px',
-  },
-  abas: {
-    display: 'flex',
-    gap: '8px',
-    marginTop: '16px',
-    borderBottom: '1px solid #e5e7eb',
-  },
-  aba: {
-    padding: '10px 20px',
-    border: 'none',
-    borderBottom: '2px solid transparent',
-    backgroundColor: 'transparent',
-    color: '#6b7280',
-    fontSize: '14px',
-    cursor: 'pointer',
-  },
-  abaAtiva: {
-    padding: '10px 20px',
-    border: 'none',
-    borderBottom: '2px solid #7c3aed',
-    backgroundColor: 'transparent',
-    color: '#7c3aed',
-    fontSize: '14px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-  },
-  tabela: {
-    width: '100%',
-    borderCollapse: 'collapse',
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    overflow: 'hidden',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-    marginTop: '24px',
-  },
-  th: {
-    textAlign: 'left',
-    padding: '14px 16px',
-    backgroundColor: '#f9fafb',
-    color: '#374151',
-    fontSize: '13px',
-    fontWeight: '600',
-    borderBottom: '1px solid #e5e7eb',
-  },
-  td: {
-    padding: '14px 16px',
-    fontSize: '14px',
-    color: '#1f2937',
-    borderBottom: '1px solid #f3f4f6',
-  },
-  statusConfirmado: {
-    color: '#16a34a',
-    fontWeight: 'bold',
-    fontSize: '13px',
-  },
-  statusCancelado: {
-    color: '#dc2626',
-    fontWeight: 'bold',
-    fontSize: '13px',
-  },
-  statusConcluido: {
-    color: '#2563eb',
-    fontWeight: 'bold',
-    fontSize: '13px',
-  },
-  acoes: {
-    display: 'flex',
-    gap: '8px',
-  },
-  botaoConcluir: {
-    padding: '6px 12px',
-    borderRadius: '6px',
-    border: '1px solid #16a34a',
-    backgroundColor: '#fff',
-    color: '#16a34a',
-    fontSize: '13px',
-    cursor: 'pointer',
-  },
-  botaoCancelar: {
-    padding: '6px 12px',
-    borderRadius: '6px',
-    border: '1px solid #dc2626',
-    backgroundColor: '#fff',
-    color: '#dc2626',
-    fontSize: '13px',
-    cursor: 'pointer',
-  },
-  motivo: {
-    fontSize: '12px',
-    color: '#6b7280',
-    margin: '4px 0 0',
-    fontStyle: 'italic',
-  },
-};
 
 export default MeusAgendamentosGestor;

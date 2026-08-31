@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { listarMeusAgendamentos, cancelarAgendamento } from '../../services/agendamentoService';
 import ModalGenerico from '../../components/shared/ModalGenerico';
+import FundoTema from '../../styles/FundoTema';
+import { tema } from '../../styles/tema';
 import type { Agendamento } from '../../types/agendamento';
 
 function MeusAgendamentosPage() {
@@ -49,22 +51,25 @@ function MeusAgendamentosPage() {
   }
 
   return (
-    <div>
-      <h1>Meus Agendamentos</h1>
+    <FundoTema>
+      <div style={tema.hero}>
+        <h1 style={tema.heroTitulo}>Meus Agendamentos</h1>
+        <p style={tema.heroSubtitulo}>Seus horários marcados, tudo num lugar só.</p>
+      </div>
 
       {agendamentos.length === 0 ? (
-        <p style={styles.vazio}>Você ainda não fez nenhum agendamento.</p>
+        <p style={tema.vazio}>Você ainda não fez nenhum agendamento.</p>
       ) : (
-        <div style={styles.lista}>
+        <div style={tema.lista}>
           {agendamentos.map((a) => (
-            <div key={a.id} style={styles.card}>
+            <div key={a.id} style={tema.cardVidro}>
               <div style={styles.cardInfo}>
-                <h3 style={styles.salao}>{a.usuarioNome}</h3>
-                <p style={styles.servico}>{a.servicoNome}</p>
-                <p style={styles.detalhe}>
+                <h3 style={tema.tituloClaro}>{a.usuarioNome}</h3>
+                <p style={tema.textoDestaque}>{a.servicoNome}</p>
+                <p style={tema.textoClaro}>
                   {a.funcionarioNome ? `Com ${a.funcionarioNome}` : 'Com o próprio profissional'}
                 </p>
-                <p style={styles.data}>{a.data} • {a.horarioInicio} - {a.horarioFim}</p>
+                <p style={tema.textoClaro}>{a.data} • {a.horarioInicio} - {a.horarioFim}</p>
               </div>
               <div style={styles.cardAcoes}>
                 <span style={a.status === 'Confirmado' ? styles.statusConfirmado : a.status === 'Cancelado' ? styles.statusCancelado : styles.statusConcluido}>
@@ -98,14 +103,15 @@ function MeusAgendamentosPage() {
         aoConfirmar={confirmarCancelamento}
         aoFechar={() => { setModalAberto(false); setIdParaCancelar(null); }}
       />
-    </div>
+    </FundoTema>
   );
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  vazio: {
-    color: '#6b7280',
-    fontSize: '16px',
+  cardInfo: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px',
   },
   cardAcoes: {
     display: 'flex',
@@ -116,76 +122,38 @@ const styles: Record<string, React.CSSProperties> = {
   botaoCancelar: {
     padding: '6px 12px',
     borderRadius: '6px',
-    border: '1px solid #dc2626',
-    backgroundColor: '#fff',
-    color: '#dc2626',
+    border: '1px solid rgba(255, 255, 255, 0.4)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    color: '#fecaca',
     fontSize: '13px',
     cursor: 'pointer',
   },
   motivo: {
     fontSize: '12px',
-    color: '#6b7280',
+    color: '#e5e7eb',
     margin: 0,
     fontStyle: 'italic',
     maxWidth: '200px',
     textAlign: 'right',
-  },
-  lista: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '16px',
-    marginTop: '24px',
-  },
-  card: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: '12px',
-    padding: '20px 24px',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-  },
-  cardInfo: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
-  },
-  data: {
-    fontSize: '13px',
-    color: '#6b7280',
-    margin: 0,
-  },
-  salao: {
-    fontSize: '16px',
-    fontWeight: 'bold',
-    color: '#1f2937',
-    margin: 0,
-  },
-  servico: {
-    fontSize: '14px',
-    color: '#7c3aed',
-    fontWeight: '600',
-    margin: 0,
-  },
-  detalhe: {
-    fontSize: '13px',
-    color: '#6b7280',
-    margin: 0,
+    textShadow: '0 1px 3px rgba(0,0,0,0.4)',
   },
   statusConfirmado: {
-    color: '#16a34a',
+    color: '#86efac',
     fontWeight: 'bold',
     fontSize: '13px',
+    textShadow: '0 1px 3px rgba(0,0,0,0.4)',
   },
   statusCancelado: {
-    color: '#dc2626',
+    color: '#fca5a5',
     fontWeight: 'bold',
     fontSize: '13px',
+    textShadow: '0 1px 3px rgba(0,0,0,0.4)',
   },
   statusConcluido: {
-    color: '#2563eb',
+    color: '#93c5fd',
     fontWeight: 'bold',
     fontSize: '13px',
+    textShadow: '0 1px 3px rgba(0,0,0,0.4)',
   },
 };
 
