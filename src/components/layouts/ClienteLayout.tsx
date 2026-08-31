@@ -50,13 +50,13 @@ const styles: Record<string, React.CSSProperties> = {
   },
   sidebar: {
     width: '240px',
-    backgroundColor: '#c61fb5ff',
+    backgroundColor: '#1f2937',
     padding: '24px 16px',
     display: 'flex',
     flexDirection: 'column',
   },
   logo: {
-    color: '#2141cbff',
+    color: '#fff',
     fontSize: '22px',
     fontWeight: 'bold',
     marginBottom: '4px',
